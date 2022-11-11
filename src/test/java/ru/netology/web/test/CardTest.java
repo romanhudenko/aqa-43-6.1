@@ -11,7 +11,6 @@ import ru.netology.web.page.LoginPage;
 import ru.netology.web.page.TransferPage;
 import ru.netology.web.page.VerificationPage;
 
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardTest {
@@ -27,12 +26,16 @@ public class CardTest {
         LoginPage login = new LoginPage();
         VerificationPage verification = login.validLogin(DataHelper.getAuthInfo());
         DashboardPage dashboard = verification.validVerify(DataHelper.getVerificationCode());
-        DataHelper.CardInfo card = DataHelper.getBankCard(0);
-        int currentBalance = dashboard.getCardBalance(card);
+        DataHelper.CardInfo card1 = DataHelper.getBankCard(0);
+        DataHelper.CardInfo card2 = DataHelper.getBankCard(1);
+        int currentBalance1 = dashboard.getCardBalance(card1);
+        int currentBalance2 = dashboard.getCardBalance(card2);
         TransferPage transfer = dashboard.startTransfer(0);
         transfer.sendMoney(DataHelper.getBankCard(1), 100);
-        int updatedBalance = dashboard.getCardBalance(card);
-        Assertions.assertEquals(currentBalance + 100, updatedBalance);
+        int updatedBalance1 = dashboard.getCardBalance(card1);
+        int updatedBalance2 = dashboard.getCardBalance(card2);
+        Assertions.assertEquals(currentBalance1 + 100, updatedBalance1);
+        Assertions.assertEquals(currentBalance2 - 100, updatedBalance2);
     }
 
     @Test
@@ -43,7 +46,7 @@ public class CardTest {
         DashboardPage dashboard = verification.validVerify(DataHelper.getVerificationCode());
         TransferPage transfer = dashboard.startTransfer(0);
         transfer.sendMoney(DataHelper.getInvalidCard(), 100);
-        $("[data-test-id=error-notification]").shouldBe(Condition.visible);
+        transfer.getErrorElement().shouldBe(Condition.visible);
     }
 
     @Test
@@ -56,8 +59,7 @@ public class CardTest {
         int currentBalance = dashboard.getCardBalance(card);
         TransferPage transfer = dashboard.startTransfer(0);
         transfer.sendMoney(card, currentBalance + 1);
-        int updatedBalance = dashboard.getCardBalance(card);
-        Assertions.assertTrue(updatedBalance > 0);
+        transfer.getErrorElement().shouldBe(Condition.visible);
     }
 
     @Test
@@ -78,8 +80,8 @@ public class CardTest {
     void cancelButtonTest() {
         LoginPage login = new LoginPage();
         VerificationPage verification = login.validLogin(DataHelper.getAuthInfo());
-        TransferPage page = verification.validVerify(DataHelper.getVerificationCode()).startTransfer(0);
-        page.cancel();
-        $("[data-test-id=dashboard]").shouldBe(Condition.visible);
+        TransferPage transfer = verification.validVerify(DataHelper.getVerificationCode()).startTransfer(0);
+        DashboardPage dashboard = transfer.cancel();
+        dashboard.getMainElement().shouldBe(Condition.visible);
     }
 }

@@ -1,6 +1,7 @@
 package ru.netology.web.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.web.data.DataHelper;
 
@@ -12,6 +13,7 @@ public class DashboardPage {
 
     private final SelenideElement refresh = $("[data-test-id=action-reload]");
 
+    private final SelenideElement main = $("[data-test-id=dashboard]");
     public DashboardPage() {
     }
 
@@ -37,5 +39,9 @@ public class DashboardPage {
 
     public void refresh() {
         refresh.click();
+    }
+
+    public SelenideElement getMainElement() {
+        return main;
     }
 }

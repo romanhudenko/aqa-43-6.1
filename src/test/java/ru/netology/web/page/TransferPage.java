@@ -11,6 +11,7 @@ public class TransferPage {
     private final SelenideElement from = $("[data-test-id=from] input");
     private final SelenideElement confirm = $("[data-test-id=action-transfer]");
     private final SelenideElement cancel = $("[data-test-id=action-cancel]");
+    private final SelenideElement error = $("[data-test-id=error-notification]");
 
     public TransferPage() {
     }
@@ -21,7 +22,12 @@ public class TransferPage {
         confirm.click();
     }
 
-    public void cancel() {
+    public SelenideElement getErrorElement() {
+        return error;
+    }
+
+    public DashboardPage cancel() {
         cancel.click();
+        return new DashboardPage();
     }
 }
