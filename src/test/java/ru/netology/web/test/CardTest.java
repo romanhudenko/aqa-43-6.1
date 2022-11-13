@@ -46,7 +46,7 @@ public class CardTest {
         DashboardPage dashboard = verification.validVerify(DataHelper.getVerificationCode());
         TransferPage transfer = dashboard.startTransfer(0);
         transfer.sendMoney(DataHelper.getInvalidCard(), 100);
-        transfer.getErrorElement().shouldBe(Condition.visible);
+        transfer.checkErrorElement("Произошла ошибка");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class CardTest {
         int currentBalance = dashboard.getCardBalance(card);
         TransferPage transfer = dashboard.startTransfer(0);
         transfer.sendMoney(card, currentBalance + 1);
-        transfer.getErrorElement().shouldBe(Condition.visible);
+        transfer.checkErrorElement("Произошла ошибка");
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ru.netology.web.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.web.data.DataHelper;
 
@@ -22,8 +23,9 @@ public class TransferPage {
         confirm.click();
     }
 
-    public SelenideElement getErrorElement() {
-        return error;
+    public void checkErrorElement(String errorText) {
+        error.shouldBe(Condition.visible);
+        error.shouldHave(Condition.text(errorText));
     }
 
     public DashboardPage cancel() {
